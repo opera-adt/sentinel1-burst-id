@@ -34,12 +34,12 @@ optional arguments:
                         File name of the output burst database. Deafult: burstID-database. This will create two geopandas databases: 1) burstID.csv and 2) burstID_stack.csv. The first one is a geopandas database of unique burst ids and their coordinates on the ground. The second is geopandas database of the stack of slcs with their unique burst ids determined.
 
 ```
-The output of the script is two geopandas dataframes. The first one () is a database of unique burst IDs which can be read as:
+The output of the script is two geopandas dataframes. The first one (burstID) is a database of unique burst IDs which can be read as:
 
 ```
 import pandas as pd
 
-df = pd.read_csv("burstID_database.csv")
+df = pd.read_csv("burstID.csv")
 df.head()
 ```
 
@@ -52,6 +52,14 @@ s1: sub-swath 1
 d: Descending orbit
 2398: time since last ascending node time in seconds. (This value is constant within some fractional seconds. Since the burst duration is around 3 seconds, the rounded integer value remains unique for this track. Together with the track number, swath number and the orbit direction, the ID is unique for agiven date and track and repeats for the next cycle of the observation over the same region and from same track.)
 
+The second output database is burstID-stack.csv which represents the database of the stack of Sentinel-1 frames with bursts labeled and the metdata to extract each burst is defined. 
+
+```
+import pandas as pd
+
+df = pd.read_csv("burstID-stack.csv")
+df.head()
+```
 
 
 # License
