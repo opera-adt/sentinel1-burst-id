@@ -80,8 +80,8 @@ gdf[gdf.intersects(poly)].plot(figsize=(30,20), color='lime',ax=ax)
 ax.plot(x,y, linewidth=10)
 ```
 
-<img width="1398" alt="Screen Shot 2021-11-19 at 9 32 53 AM" src="https://user-images.githubusercontent.com/5033183/142666410-ce74930e-d678-4d91-9a74-9f2643c5d002.png">
 
+<img width="486" alt="Screen Shot 2021-11-19 at 9 38 51 AM" src="https://user-images.githubusercontent.com/5033183/142666980-430fdff3-cdcf-4491-9763-6fab957b3e89.png">
 
 
 The second output database is burstID-stack.csv which represents the database of the stack of Sentinel-1 frames with bursts labeled and the metdata to extract each burst is defined. 
