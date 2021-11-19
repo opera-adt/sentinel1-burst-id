@@ -68,6 +68,22 @@ gdf = gpd.GeoDataFrame(df, crs='epsg:4326')
 gdf.plot()
 ```
 
+Once the database exists one can easily query and intersect with a bounding box or filter with different metadata.
+
+```
+poly = Polygon(zip([-120,-119,-119,-120], [30.0,30,31,31]))
+x,y = poly.exterior.xy
+
+fig,ax =plt.subplots(1,figsize=(20,10))
+gdf.plot(color='blue', ax=ax)
+gdf[gdf.intersects(poly)].plot(figsize=(30,20), color='lime',ax=ax)
+ax.plot(x,y, linewidth=10)
+```
+
+<img width="1398" alt="Screen Shot 2021-11-19 at 9 32 53 AM" src="https://user-images.githubusercontent.com/5033183/142666410-ce74930e-d678-4d91-9a74-9f2643c5d002.png">
+
+
+
 The second output database is burstID-stack.csv which represents the database of the stack of Sentinel-1 frames with bursts labeled and the metdata to extract each burst is defined. 
 
 ```
