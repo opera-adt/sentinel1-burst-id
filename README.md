@@ -50,7 +50,23 @@ In the example above the first column is the defined burst id. The first defined
 t71 : Track 71
 s1: sub-swath 1
 d: Descending orbit
-2398: time since last ascending node time in seconds. (This value is constant within some fractional seconds. Since the burst duration is around 3 seconds, the rounded integer value remains unique for this track. Together with the track number, swath number and the orbit direction, the ID is unique for agiven date and track and repeats for the next cycle of the observation over the same region and from same track.)
+2398: time since last ascending node time in seconds. (This value is constant within some fractional seconds. Since the burst duration is around 3 seconds, the rounded integer value remains unique for this track. Together with the track number, swath number and the orbit direction, the ID should be unique (to be confirmed) for agiven date and track and repeats for the next cycle of the observation over the same region and from same track.)
+To see a plot of the bursts one can use geopandas as shown below:
+
+```
+import pandas as pd
+import shapely
+import geopandas as gpd
+import pyproj
+
+
+df = pd.read_csv("burstID_database.csv")
+
+df['geometry'] = df['geometry'].apply(shapely.wkt.loads)
+gdf = gpd.GeoDataFrame(df, crs='epsg:4326')
+
+gdf.plot()
+```
 
 The second output database is burstID-stack.csv which represents the database of the stack of Sentinel-1 frames with bursts labeled and the metdata to extract each burst is defined. 
 
