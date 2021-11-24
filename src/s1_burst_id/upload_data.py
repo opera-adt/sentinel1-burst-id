@@ -1,13 +1,12 @@
+#!/usr/bin/env python3
 """Python S3 Manager"""
 
 import sys
 import os
+import pandas as pd
 import boto3
 from botocore.exceptions import ClientError
-import pandas as pd
-import json
 from shapely.geometry import box
-import requests
 
 
 class s3UploadDownload:

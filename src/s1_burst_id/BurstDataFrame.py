@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+
+
 import json
 import os
 import datetime                                                                                                                                                   
@@ -9,7 +11,7 @@ import fnmatch
 import pandas as pd
 import geopandas as gpd 
 from shapely.geometry import Polygon
-from upload_data import s3UploadDownload
+from s1_burst_id.upload_data import s3UploadDownload
 
 
 
@@ -19,16 +21,16 @@ class BurstDataFrame:
     """
 
     def __init__(self, url=None, swath=1):
-      """The constructor for BurstDataFrame class.
-      Parameters:
-          url: the URL of a Sentinel-1 frame
-          swath: the swath number of the frame (1,2 or 3)
-      """
+        """The constructor for BurstDataFrame class.
+        Parameters:
+            url: the URL of a Sentinel-1 frame
+            swath: the swath number of the frame (1,2 or 3)
+        """
 
-      self.url = url
-      self.swath = swath
-      self.df = gpd.GeoDataFrame(columns=['burst_ID', 'pass_direction', 'longitude', 'latitude', 'geometry'])
-      self.df_tseries = gpd.GeoDataFrame(columns=['burst_ID', 'date', 'url', 'measurement', 'annotation', 'start', 'end'])
+        self.url = url
+        self.swath = swath
+        self.df = gpd.GeoDataFrame(columns=['burst_ID', 'pass_direction', 'longitude', 'latitude', 'geometry'])
+        self.df_tseries = gpd.GeoDataFrame(columns=['burst_ID', 'date', 'url', 'measurement', 'annotation', 'start', 'end'])
 
     def getCoordinates(self, zipname):
         """
@@ -51,7 +53,7 @@ class BurstDataFrame:
         cmd = "gdalinfo -json {} >> info.json".format(tiffname)
         os.system(cmd)
         with open("info.json", 'r') as fid:
-           info = json.load(fid)
+            info = json.load(fid)
 
         df_coordinates = pd.DataFrame(info['gcps']['gcpList'])
         os.system('rm info.json')
@@ -171,8 +173,7 @@ class BurstDataFrame:
 
         fileObj = s3UploadDownload(bucket_name)
         fileObj.put_file(filename)
-        
-       
+
 
 def getxmlattr( xml_root, path, key):
     """
@@ -230,5 +231,4 @@ def read_time(input_str, fmt="%Y-%m-%dT%H:%M:%S.%f"):
 
     dt = datetime.datetime.strptime(input_str, fmt)
     return dt
-
 
