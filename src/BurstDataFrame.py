@@ -43,7 +43,7 @@ class BurstDataFrame:
 
         zf = zipfile.ZipFile(zipname, 'r')
 
-        tiffpath = os.path.join('*SAFE','measurement', 's1a-iw{}-slc*tiff'.format(self.swath))
+        tiffpath = os.path.join('*SAFE','measurement', 's1[ab]-iw{}-slc*tiff'.format(self.swath))
         match = fnmatch.filter(zf.namelist(), tiffpath)
         zf.close()
 
@@ -94,7 +94,7 @@ class BurstDataFrame:
         """
 
         zf = zipfile.ZipFile(zipname, 'r')
-        xmlpath = os.path.join('*SAFE','annotation', 's1a-iw{}-slc*xml'.format(self.swath))
+        xmlpath = os.path.join('*SAFE','annotation', 's1[ab]-iw{}-slc*xml'.format(self.swath))
         match = fnmatch.filter(zf.namelist(), xmlpath)
         xmlstr = zf.read(match[0])
         annotation_path = match[0]
