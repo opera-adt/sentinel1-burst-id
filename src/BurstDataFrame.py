@@ -104,8 +104,13 @@ class BurstDataFrame:
         numBursts = getxmlattr(xml_root, 'swathTiming/burstList', 'count')
         burstList = getxmlelement(xml_root, 'swathTiming/burstList')
         passtype=getxmlvalue(xml_root, 'generalAnnotation/productInformation/pass')
-        orbitnumber = int(getxmlvalue(xml_root, 'adsHeader/absoluteOrbitNumber'))
-        trackNumber = (orbitnumber-73)%175 + 1
+        orbitNumber = int(getxmlvalue(xml_root, 'adsHeader/absoluteOrbitNumber'))
+        # relative orbit number
+        # link: https://forum.step.esa.int/t/sentinel-1-relative-orbit-from-filename/7042/20
+        if os.path.basename(zipname).lower().startswith('s1a'):
+            trackNumber = (orbitNumber - 73) % 175 + 1
+        else:
+            trackNumber = (orbitNumber - 27) % 175 + 1
         lineperburst = int(getxmlvalue(xml_root, 'swathTiming/linesPerBurst'))
         geocords, tiff_path = self.getCoordinates(zipname)
         for index, burst in enumerate(list(burstList)):
