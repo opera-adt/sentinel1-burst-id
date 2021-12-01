@@ -43,7 +43,7 @@ class BurstDataFrame:
 
         zf = zipfile.ZipFile(zipname, 'r')
 
-        tiffpath = os.path.join('*SAFE','measurement', 's1a-iw{}-slc*tiff'.format(self.swath))
+        tiffpath = os.path.join('*SAFE','measurement', 's1[ab]-iw{}-slc*tiff'.format(self.swath))
         match = fnmatch.filter(zf.namelist(), tiffpath)
         zf.close()
 
@@ -94,7 +94,7 @@ class BurstDataFrame:
         """
 
         zf = zipfile.ZipFile(zipname, 'r')
-        xmlpath = os.path.join('*SAFE','annotation', 's1a-iw{}-slc*xml'.format(self.swath))
+        xmlpath = os.path.join('*SAFE','annotation', 's1[ab]-iw{}-slc*xml'.format(self.swath))
         match = fnmatch.filter(zf.namelist(), xmlpath)
         xmlstr = zf.read(match[0])
         annotation_path = match[0]
@@ -104,8 +104,13 @@ class BurstDataFrame:
         numBursts = getxmlattr(xml_root, 'swathTiming/burstList', 'count')
         burstList = getxmlelement(xml_root, 'swathTiming/burstList')
         passtype=getxmlvalue(xml_root, 'generalAnnotation/productInformation/pass')
-        orbitnumber = int(getxmlvalue(xml_root, 'adsHeader/absoluteOrbitNumber'))
-        trackNumber = (orbitnumber-73)%175 + 1
+        orbitNumber = int(getxmlvalue(xml_root, 'adsHeader/absoluteOrbitNumber'))
+        # relative orbit number
+        # link: https://forum.step.esa.int/t/sentinel-1-relative-orbit-from-filename/7042/20
+        if os.path.basename(zipname).lower().startswith('s1a'):
+            trackNumber = (orbitNumber - 73) % 175 + 1
+        else:
+            trackNumber = (orbitNumber - 27) % 175 + 1
         lineperburst = int(getxmlvalue(xml_root, 'swathTiming/linesPerBurst'))
         geocords, tiff_path = self.getCoordinates(zipname)
         for index, burst in enumerate(list(burstList)):
