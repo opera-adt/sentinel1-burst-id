@@ -99,6 +99,8 @@ class BurstDataFrame:
         xmlstr = zf.read(match[0])
         annotation_path = match[0]
         xml_root = ET.fromstring(xmlstr)
+        # Burst interval
+        burst_interval = 2.758277
 
         ascNodeTime = getxmlvalue(xml_root, "imageAnnotation/imageInformation/ascendingNodeTime")
         numBursts = getxmlattr(xml_root, 'swathTiming/burstList', 'count')
@@ -116,7 +118,8 @@ class BurstDataFrame:
         for index, burst in enumerate(list(burstList)):
             sensingStart = burst.find('azimuthTime').text
             dt = read_time(sensingStart)-read_time(ascNodeTime)
-            burstID = "t"+str(trackNumber) + "s" + self.swath + "d" + str(dt.seconds)
+            time_info = int((dt.seconds + dt.microseconds*1e6)/burst_interval)
+            burstID = "t"+str(trackNumber) + "s" + self.swath + "d" + str(time_info)
             thisBurstCoords, xc, yc = self.burstCoords(geocords, lineperburst, index)
             # check if self.df has this dt for this track. If not append it
             
