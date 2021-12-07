@@ -63,13 +63,13 @@ class BurstDataFrame:
 
         Parameters:
             geocoords: A pandas dataframe of GCPs 
-            lineperburst: number of lines in each busrt
+            lineperburst: number of lines in each burst
             idx: index of the burst of interest
 
         Returns:
             poly: a shapely polygon represnting the boundary of the burst
             xc: longitude of the centroid of the polygon
-            yc: latitude of the centroid of the plygon
+            yc: latitude of the centroid of the polygon
         """
 
         firstLine = geocoords.loc[geocoords['line']==idx*lineperburst].filter(['x', 'y'])
@@ -155,7 +155,7 @@ class BurstDataFrame:
         The function to store the data frames to CSV files
         Parameters:
             output_id: name of the output file for the Burst ID data frame
-            output_id_tseries: name of the output file for the time-series of the bursts 
+            output_id_tseries: name of the output file for the time-series of the bursts
         """
 
         self.df.to_csv(output_id, mode='w', index=False)
@@ -203,7 +203,7 @@ def getxmlvalue( xml_root, path):
 
 def getxmlelement(xml_root,  path):
     """
-    extract an elemnet of a xml file
+    extract an element of a xml file
     """
 
     try:
