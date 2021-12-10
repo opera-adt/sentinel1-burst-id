@@ -63,13 +63,13 @@ class BurstDataFrame:
 
         Parameters:
             geocoords: A pandas dataframe of GCPs 
-            lineperburst: number of lines in each busrt
+            lineperburst: number of lines in each burst
             idx: index of the burst of interest
 
         Returns:
             poly: a shapely polygon represnting the boundary of the burst
             xc: longitude of the centroid of the polygon
-            yc: latitude of the centroid of the plygon
+            yc: latitude of the centroid of the polygon
         """
 
         firstLine = geocoords.loc[geocoords['line']==idx*lineperburst].filter(['x', 'y'])
@@ -99,6 +99,8 @@ class BurstDataFrame:
         xmlstr = zf.read(match[0])
         annotation_path = match[0]
         xml_root = ET.fromstring(xmlstr)
+        # Burst interval
+        burst_interval = 2.758277
 
         ascNodeTime = getxmlvalue(xml_root, "imageAnnotation/imageInformation/ascendingNodeTime")
         numBursts = getxmlattr(xml_root, 'swathTiming/burstList', 'count')
@@ -116,7 +118,8 @@ class BurstDataFrame:
         for index, burst in enumerate(list(burstList)):
             sensingStart = burst.find('azimuthTime').text
             dt = read_time(sensingStart)-read_time(ascNodeTime)
-            burstID = "t"+str(trackNumber) + "s" + self.swath + "d" + str(dt.seconds)
+            time_info = int((dt.seconds + dt.microseconds*1e6)/burst_interval)
+            burstID = "t"+str(trackNumber) + "s" + self.swath + "b" + str(time_info)
             thisBurstCoords, xc, yc = self.burstCoords(geocords, lineperburst, index)
             # check if self.df has this dt for this track. If not append it
             
@@ -152,7 +155,7 @@ class BurstDataFrame:
         The function to store the data frames to CSV files
         Parameters:
             output_id: name of the output file for the Burst ID data frame
-            output_id_tseries: name of the output file for the time-series of the bursts 
+            output_id_tseries: name of the output file for the time-series of the bursts
         """
 
         self.df.to_csv(output_id, mode='w', index=False)
@@ -200,7 +203,7 @@ def getxmlvalue( xml_root, path):
 
 def getxmlelement(xml_root,  path):
     """
-    extract an elemnet of a xml file
+    extract an element of a xml file
     """
 
     try:
