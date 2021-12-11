@@ -5,29 +5,46 @@ import glob
 import datetime
 import argparse
 
-from query import query_asf, read_query
-from BurstDataFrame import BurstDataFrame 
+from s1_burst_id.query import query_asf, read_query
+from s1_burst_id.BurstDataFrame import BurstDataFrame 
 
 
 EXAMPLE = """example:
+  # check help
   create_burst_id.py                         #run with showing help'
   create_burst_id.py -h / --help             #help
   create_burst_id.py -H                      #print default options
-  create_burst_id.py -b 10 11 -121 -120     #runs with the given bounding box. Queries the archive for the Sentinel-1 data over the region of interest
-  create_burst_id.py -d /scratch/fattahi/s1_data # Ignores the bounding box and ignores searching the archive. Instead searches the input directory for the Sentinel-1 zip files (looking for the pattern of S1*IW*SLC*zip)
+
+  # run with the given bounding box to query the archive over AOI
+  create_burst_id.py -b 10 11 -121 -120
+
+  # run with the given directory (looking for the pattern of S1*IW*SLC*zip)
+  # Ignores the bounding box and ignores searching the archive.
+  create_burst_id.py -d /scratch/fattahi/s1_data
 """
 
 def create_parser():
     parser = argparse.ArgumentParser(description='Sample script to create burst id database',
                                      formatter_class=argparse.RawTextHelpFormatter,
                                      epilog=EXAMPLE)
-    parser.add_argument('-d', '--frame_dir', type = str, default = None, dest = 'frame_dir', help = 'The directory with existing Sentiel-1 SLC zip file.')
-    parser.add_argument('-b', '--bbox', type = float, default = None, nargs = '+', dest = 'bbox', help = 'Defines the spatial bounding box in the format south north west east.')
-    parser.add_argument('-s', '--start_date', type = str, default = '2019-01-01', dest = 'start_date', help = 'Start date to search the asf archive. Format: YYYY-MM-DD. Default: 2019-01-01')
-    parser.add_argument('-e', '--end_date', type = str, default = '2019-02-01', dest = 'end_date', help = 'End date to search the asf archive. Format YYYY-MM-DD. Deafult: 2019-02-01')
-    parser.add_argument('-p', '--platform', type = str, default = 'Sentinel-1', dest = 'platform', help = 'Name of the Sentinel-1 platform to search (Sentinel-1A, Sentinel-1B, Sentinel-1). Deafult: Sentinel-1 which queries both Sentinel-1A and Sentinel-1B')
-    parser.add_argument('-o', '--output_name', type = str, default = 'burstID', dest = 'output_name', help = 'File name of the output burst database. Deafult: burstID-database. This will create two geopandas databases: 1) burstID.csv and 2) burstID_stack.csv. The first one is a geopandas database of unique burst ids and their coordinates on the ground. The second is geopandas database of the stack of slcs with their unique burst ids determined. ')
+    parser.add_argument('-d', '--frame_dir', type = str, default = None, dest = 'frame_dir',
+                        help = 'The directory with existing Sentiel-1 SLC zip file.')
+    parser.add_argument('-b', '--bbox', type = float, default = None, nargs = '+', dest = 'bbox',
+                        help = 'Defines the spatial bounding box in the format south north west east.')
+    parser.add_argument('-s', '--start_date', type = str, default = '2019-01-01', dest = 'start_date',
+                        help = 'Start date to search the asf archive. Format: YYYY-MM-DD. Default: 2019-01-01')
+    parser.add_argument('-e', '--end_date', type = str, default = '2019-02-01', dest = 'end_date',
+                        help = 'End date to search the asf archive. Format YYYY-MM-DD. Deafult: 2019-02-01')
+    parser.add_argument('-p', '--platform', type = str, default = 'Sentinel-1', dest = 'platform',
+                        help = 'Name of the Sentinel-1 platform to search (Sentinel-1A, Sentinel-1B, Sentinel-1).\n'
+                               'Deafult: Sentinel-1 which queries both Sentinel-1A and Sentinel-1B')
+    parser.add_argument('-o', '--output_name', type = str, default = 'burstID', dest = 'output_name',
+                        help = 'File name of the output burst database. Deafult: burstID-database.\n'
+                               'This will create two geopandas databases: 1) burstID.csv and 2) burstID_stack.csv.\n'
+                               'The first one is a geopandas database of unique burst ids and their coordinates on the ground.\n'
+                               'The second is geopandas database of the stack of slcs with their unique burst ids determined.')
     return parser
+
 
 def main():
     """

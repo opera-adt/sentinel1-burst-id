@@ -1,5 +1,28 @@
 # sentinel1-burst-id
+
 A prototype for assigning a unique burst id to Sentinel-1 SLC bursts
+
+## Installation
+
+```bash
+# download source code
+cd ~/tools/
+git clone https://github.com/opera-adt/sentinel1-burst-id.git
+
+# install dependencies
+conda install --file sentinel1-burst-id/requirements.txt wget
+```
+
+Setup environment variables as below:
+
+```bash
+export S1_BURST_ID_HOME=~/tools/sentinel1-burst-id
+export PYTHONPATH=${PYTHONPATH}:${S1_BURST_ID_HOME}/src
+export PATH=${PATH}:${S1_BURST_ID_HOME}/bin
+```
+
+## Usage
+
 
 In order to run a sample script which creates a database of burst ids one can run create_burst_id.py using an already downloaded set of zip files. 
 
