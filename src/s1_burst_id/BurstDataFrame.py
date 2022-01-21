@@ -120,7 +120,7 @@ class BurstDataFrame:
         for index, burst in enumerate(list(burstList)):
             sensingStart = burst.find('azimuthTime').text
             dt = read_time(sensingStart)-read_time(ascNodeTime)
-            time_info = int((dt.seconds + dt.microseconds*1e6)/burst_interval)
+            time_info = int((dt.seconds + dt.microseconds/1e6) / burst_interval)
             burstID = "t"+str(trackNumber) + "s" + self.swath + "b" + str(time_info)
             thisBurstCoords, xc, yc = self.burstCoords(geocords, lineperburst, index)
             # check if self.df has this dt for this track. If not append it
