@@ -29,9 +29,9 @@ class BurstDataFrame:
 
         self.url = url
         self.swath = swath
+        
         self.df = gpd.GeoDataFrame(columns=['burst_ID', 'pass_direction', 'longitude', 'latitude', 'geometry'])
-        self.df_tseries = gpd.GeoDataFrame(columns=['burst_ID', 'date', 'url', 'measurement', 'annotation', 'start', 'end'])
-
+        self.df_tseries = pd.DataFrame(columns=['burst_ID', 'date', 'url', 'measurement', 'annotation', 'start', 'end'])
     def getCoordinates(self, zipname):
         """
         The function to extract the Ground Control Points (GCP) of bursts from tiff file.
@@ -129,26 +129,24 @@ class BurstDataFrame:
             if burst_query.empty:
                 print("adding {} to the dataframe".format(burstID))
              
-                self.df = self.df.append({'burst_ID':burstID,
+                self.df = pd.concat([self.df, pd.DataFrame.from_records([{'burst_ID':burstID,
                                           'pass_direction':passtype,
                                           'longitude':xc,
                                           'latitude':yc,
                                           'geometry':thisBurstCoords.wkt
-                                          }, ignore_index=True)
+                                          }])])
 
             else:
                 print('The Unique ID {} already exists.'.format(burstID))
 
- 
-            self.df_tseries = self.df_tseries.append({'burst_ID': burstID,
+            self.df_tseries = pd.concat([self.df_tseries, pd.DataFrame.from_records([{'burst_ID': burstID,
                                                       'date': read_time(sensingStart).strftime("%Y-%m-%d"),
                                                       'url': self.url,
                                                       'measurement': tiff_path,
                                                       'annotation': annotation_path,
                                                       'start':index*lineperburst,
-                                                      'end':(index+1)*lineperburst},
-                                                       ignore_index=True)
-
+                                                      'end':(index+1)*lineperburst}])])
+ 
         zf.close()    
 
 
